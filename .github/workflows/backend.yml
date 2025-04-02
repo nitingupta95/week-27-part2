@@ -25,5 +25,5 @@ jobs:
           context: .
           file: ./docker/Dockerfile.htpp
           push: true
-          tags: nitin329/week-27-part2:${{github.sha}}
+          tags: nitin329/week-27-part2-backend:${{github.sha}}
 

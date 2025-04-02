@@ -1,4 +1,4 @@
-name: Continuous Deployment (Backend)
+name: Continuous Deployment (frontend)
 on:
   push:
     branches: [ main ]
@@ -23,7 +23,11 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./docker/Dockerfile.htpp
+          file: ./docker/Dockerfile.frontend
+          build-args:
+            -  DATABASE_URL=${{secrets.DATABASE_URL}}
           push: true
-          tags: nitin329/week-27-part2:${{github.sha}}
+          tags: nitin329/week-27-part2-frontend:${{github.sha}}
+
+          
 

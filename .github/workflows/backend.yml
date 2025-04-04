@@ -27,41 +27,8 @@ jobs:
           push: true
           tags: nitin329/week-27-part2-backend:${{github.sha}}
 
-name: Continuous Deployment (Backend)
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Docker login
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./docker/Dockerfile  # Ensure the correct Dockerfile name
-          push: true
-          tags: nitin329/week-27-part2-backend:${{ github.sha }}
-
-      - name: Deploy to VM
+      - name : Deploy to VM
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
-          chmod 600 ~/ssh_key
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@15.206.89.132 -t "
-            docker stop user_backend || true && \
-            docker rm user_backend || true && \
-            docker pull nitin329/week-27-part2-backend:${{ github.sha }} && \
-            docker run --name user_backend -d -p 8080:8080 nitin329/week-27-part2-backend:${{ github.sha }}"
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
+          chmod 700 /home/runner/ssh_key
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@15.206.89.132 -t "docker stop user_backend && docker run --name user_backend -d -p 8080:8080 nitin329/nitin329/week-27-part2-backend:${{ github.sha }}"
